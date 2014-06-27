@@ -74,8 +74,10 @@ semiCircle = circle . (/ 2)
 -- | Torus, given radius of sweep circle and cross section
 torus :: (AdditiveGroup s, Eq s, Floating s, VectorSpace s, Scalar s ~ s) => s -> s -> Surf s
 -- torus sr cr = revolve (\ s -> (sr,0) ^+^ cr *^ circle s)
-torus sr cr = revolve (const (sr :+ 0) ^+^ const cr *^ circle)
-
+torus sr cr = revolve (translate2 (sr,0) (uscale2 cr circle))
+  where
+    translate2 (x,y) curve = const (x :+ y) ^+^ curve
+    uscale2 s curve        = const s *^ curve
 -- Surface of revolution, formed by rotation around Z axis.  The curve is
 -- parameterized by u, and the rotation by v.  In this generalized
 -- version, we have not a single curve, but a function from v to curves.
@@ -88,7 +90,6 @@ revolve curve = revolveG (const curve)
 -- A sphere is a revolved semi-circle
 sphere1 :: Floating s => Surf s
 sphere1 = revolve semiCircle
-
 
 -- | Profile product.
 profile :: Num s => Curve2 s -> Curve2 s -> Surf s
@@ -165,6 +166,9 @@ rotate theta = \ (x :+ y) -> (x * c - y * s) :+  (y * c + x * s)
  where c = cos theta
        s = sin theta
 
+translate :: Floating s => s -> Warp1 s
+translate d = \x -> x + d
+
 addX, addY, addZ :: Num s => (a -> Complex s) -> (a -> (s,s,s))
 addX = fmap (\ (y :+ z) -> (0,y,z))
 addY = fmap (\ (x :+ z) -> (x,0,z))
@@ -195,6 +199,14 @@ onXY',onXZ',onYZ' :: Warp2 s -> (a -> (s,s,s)) -> (a -> (s,s,s))
 onXY' = fmap . onXY
 onXZ' = fmap . onXZ
 onYZ' = fmap . onYZ
+
+
+--
+-- | Rotate using a rotation matrix
+--
+rotateByMatrix :: Num s => ((s,s,s), (s,s,s), (s,s,s)) -> Warp3 s
+rotateByMatrix ((a0,a1,a2), (b0,b1,b2), (c0,c1,c2)) (x,y,z) =
+  (a0*x+a1*y+a2*z, b0*x+b1*y+b2*z, c0*x+c1*y+c2*z)
 
 
 {--------------------------------------------------------------------

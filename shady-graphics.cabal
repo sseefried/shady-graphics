@@ -29,6 +29,8 @@ Library
                      , TypeCompose >= 0.7, MemoTrie, ty, data-treify
                      , Boolean, NumInstances, type-unary
                      , shady-gen
+                     , bytestring
+                     , aeson
   Exposed-Modules:
                         Shady.ITransform
                         Shady.Color
@@ -37,5 +39,6 @@ Library
                         Shady.Lighting
                         Shady.CompileSurface
                         Shady.CompileImage
+                        Shady.CompileEffect
 
 

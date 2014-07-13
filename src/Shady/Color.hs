@@ -1,6 +1,7 @@
 {-# LANGUAGE TypeSynonymInstances, TypeOperators, FlexibleInstances
            , GeneralizedNewtypeDeriving, TypeFamilies
            , MultiParamTypeClasses, UndecidableInstances
+           , DeriveDataTypeable
   #-}
 {-# OPTIONS_GHC -Wall #-}
 ----------------------------------------------------------------------
@@ -39,6 +40,7 @@ import Data.Boolean
 import Shady.Misc (Unop, Binop)
 import Shady.Language.Exp
 
+import Data.Typeable
 
 -- TODO: Vector space instance
 
@@ -52,7 +54,7 @@ type Float4E = (FloatE,FloatE,FloatE,FloatE)
 -- | Color, as RGBA
 newtype Color = C { unC :: Float4E }
   deriving ( Eq,Ord,Show,Num,Fractional,Floating
-           , AdditiveGroup)
+           , AdditiveGroup, Typeable)
 
 -- VectorSpace has an associated type, which @deriving@ currently doesn't handle.
 instance VectorSpace Color where

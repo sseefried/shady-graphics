@@ -1,5 +1,5 @@
 {-# LANGUAGE RankNTypes, GADTs, TypeFamilies, ScopedTypeVariables, FlexibleInstances #-}
-{-# LANGUAGE FlexibleContexts, OverloadedStrings #-}
+{-# LANGUAGE FlexibleContexts, OverloadedStrings, DeriveDataTypeable #-}
 {-# OPTIONS_GHC -Wall #-}
 module Shady.CompileEffect(
   -- data types
@@ -35,13 +35,14 @@ import Data.Aeson as JSON
 import qualified Data.ByteString.Lazy.Char8 as BS
 import Data.List (intersperse)
 import Control.Monad.State.Lazy
+import Data.Typeable
 
 
 data ShadyEffect c = ShadyEffect {
   shadyGeometryUI  :: UI (ShadyGeometry c),
   shadyEyePos      :: EyePos,
   shadyViewGen     :: R3E -> View
-}
+} deriving (Typeable)
 
 -- default shadyEffect
 shadyEffect :: UI (ShadyGeometry c) -> ShadyEffect c
